@@ -5,6 +5,8 @@ from view.material.IssueBook import *
 from controller.BookController import Books
 import base64
 from controller.Borrow_Controller import borrowed_check,checklatereturn,borrow
+from controller.returnController import borrID
+from controller.returnController import returnbook
 
 class Dashboard(AppPage):
 #---------- this is for issuebook ---------#
@@ -18,14 +20,90 @@ class Dashboard(AppPage):
     bookimage = ft.Ref[ft.Container]()
     issuebutton = ft.Ref[ft.ElevatedButton]()
     daylimit = 3
-#------------------------------------------#
+#----------this is for returnbook----------#
+    InputIDreturn = ft.Ref[ft.TextField]()
+    avatar = ft.Ref[ft.Container]()
+    name = ft.Ref[ft.TextField]()
+    lastname = ft.Ref[ft.TextField]()
+    address = ft.Ref[ft.TextField]()
+    phonenumber = ft.Ref[ft.TextField]()
+    course = ft.Ref[ft.TextField]()
+    email = ft.Ref[ft.TextField]()
+    returnlistview = ft.Ref[ft.Row]()
+    returncells = ft.Ref[ft.DataTable]()
+    bookidreturn = ft.Ref[ft.TextField]()
+#---------For change page----------#
+    issuebookvisible = ft.Ref[ft.Container]()
+    returnbookvisile = ft.Ref[ft.Container]()
+    addbookvisible = ft.Ref[ft.Container]()
+    pulloutbookvisible =  ft.Ref[ft.Container]()
+    paymentvisible = ft.Ref[ft.Container]()
+    dashboardvisible = ft.Ref[ft.Container]()
+    maintenancevisible = ft.Ref[ft.Container]()
+
+
+
     def __init__(self, root, route):
         super().__init__(root=root, route=route)
         self.page.did_mount = self.did_mount
 
+    def returnbutton(self,e):
+        returnbook(self.bookidreturn.current.value)
+        self.page.update()
+    def returnchecker(self,e):
+        self.returncells.current.rows.clear()
+        self.setreturn = borrID(self.InputIDreturn.current.value)
+
+        if len(self.setreturn) == 0:
+            self.name.current.value = None
+            self.lastname.current.value = None
+            self.email.current.value = None
+            self.phonenumber.current.value = None
+            self.address.current.value = None
+            self.avatar.current.image_src_base64 = None
+            self.course.current.value = None
+            self.page.update()
+
+        for row in self.setreturn:
+            self.name.current.value = row[5]  # fname
+            self.lastname.current.value = row[6]  # lastname
+            self.email.current.value = row[7]  # email
+            self.phonenumber.current.value = row[8]  # phonenum
+            self.address.current.value = row[9]  # address
+            self.avatar.current.image_src_base64 = base64.b64encode(row[10]).decode('utf-8')
+            self.course.current.value = row[11]  # course
+            self.returncells.current.rows.append \
+                (
+                    ft.DataRow \
+                        (
+                            cells=\
+                            [
+                                ft.DataCell(ft.Text(value=row[0])),
+                                ft.DataCell(ft.Text(value=row[1])),
+                                ft.DataCell(ft.Text(value=row[2])),
+                                ft.DataCell(ft.Text(value=row[3])),
+                                ft.DataCell(ft.Text(value=row[4])),
+                            ]
+                        )
+                )
+            print(row[1])#title
+            print(row[2])#issuedate
+            print(row[3])#returndate
+            print(row[4])#latereturnday
+
+            self.page.update()
+
     def Borrow_button(self,e):
-        pass
-        #self.borrow = borrow(borrowerID=self.InputID.current.value,bookID=self.bookid.current.value,daylimit=self.daylimit)
+        borrow(borrowerID=self.InputID.current.value,bookID=self.bookid.current.value,daylimit=self.daylimit)
+        borrowed_check()
+        checklatereturn()
+        self.bookid.current.value = None
+        self.booktitle.current.value = None
+        self.bookcategory.current.value = None
+        self.bookauthor.current.value = None
+        self.bookimage.current.image_src_base64 = None
+        self.bookprice.current.value = None
+        self.page.update()
 
     def IDchecker(self,e):
         try:
@@ -174,8 +252,178 @@ class Dashboard(AppPage):
                                     col=10,
                                     controls= \
                                         [
+                                            ft.Container \
+                                                (
+                                                    visible=True,  ###>>> THIS FOR RETURNBOOK PAGE
+                                                    padding=10,
+                                                    bgcolor=ft.colors.TERTIARY_CONTAINER,
+                                                    width=10000,
+                                                    height=820,
+                                                    border_radius=15,
+                                                    content= \
+                                                        (
+                                                            ft.Column \
+                                                                (
+                                                                    controls=\
+                                                                    [
+                                                                        ft.Container \
+                                                                            (
+                                                                                padding=10,
+                                                                                border_radius=9,
+                                                                                bgcolor=ft.colors.ON_TERTIARY,
+                                                                                width=10000,
+                                                                                height=90,
+                                                                                content= \
+                                                                                    (
+                                                                                        ft.Text \
+                                                                                            (
+                                                                                                value="Return",
+                                                                                                size=50
+                                                                                            )
+                                                                                    )
+                                                                            ),
+                                                                        ft.TextField \
+                                                                            (
+                                                                                ref=self.InputIDreturn,
+                                                                                label="ID:",
+                                                                                on_change=self.returnchecker
+                                                                            ),
+                                                                        ft.Container \
+                                                                            (
+                                                                                height=120,
+                                                                                content=\
+                                                                                ft.Row \
+                                                                                    (
+                                                                                        controls=\
+                                                                                        [
+                                                                                            ft.Container \
+                                                                                                (
+                                                                                                    width=10
+                                                                                                ),
+                                                                                            ft.Container \
+                                                                                                (
+                                                                                                    image_fit=ft.ImageFit.COVER,
+                                                                                                    image_src_base64=None,
+                                                                                                    border_radius=25,
+                                                                                                    width=150,
+                                                                                                    height=130,
+                                                                                                    ref=self.avatar
+                                                                                                ),
+                                                                                            ft.Container \
+                                                                                                (
+                                                                                                    width=10
+                                                                                                ),
+                                                                                            ft.Column \
+                                                                                                (
+                                                                                                    controls=\
+                                                                                                    [
+                                                                                                        ft.TextField \
+                                                                                                            (
+                                                                                                                height=55,
+                                                                                                                label="Name",
+                                                                                                                ref=self.name
+                                                                                                            ),
+                                                                                                        ft.TextField \
+                                                                                                            (
+                                                                                                                height=55,
+                                                                                                                label="Address",
+                                                                                                                ref=self.address
+                                                                                                            )
+                                                                                                    ]
+                                                                                                ),
+                                                                                            ft.Column \
+                                                                                                (
+                                                                                                    controls=\
+                                                                                                    [
+                                                                                                        ft.TextField \
+                                                                                                            (
+                                                                                                                height=55,
+                                                                                                                label="Lastname",
+                                                                                                                ref = self.lastname
+                                                                                                            ),
+                                                                                                        ft.TextField \
+                                                                                                            (
+                                                                                                                height= 55,
+                                                                                                                label="Phonenumber",
+                                                                                                                ref = self.phonenumber
+                                                                                                            )
+                                                                                                    ]
+                                                                                                ),
+                                                                                            ft.Column \
+                                                                                                (
+                                                                                                    controls=\
+                                                                                                    [
+                                                                                                        ft.TextField \
+                                                                                                            (
+                                                                                                                height=55,
+                                                                                                                label="Course",
+                                                                                                                ref=self.course
+                                                                                                            ),
+                                                                                                        ft.TextField \
+                                                                                                            (
+                                                                                                                height=55,
+                                                                                                                label="Email",
+                                                                                                                ref=self.email
+                                                                                                            )
+
+                                                                                                    ]
+                                                                                                )
+                                                                                        ]
+                                                                                    )
+                                                                            ),
+                                                                        ft.Container \
+                                                                            (
+                                                                                ref=None,
+                                                                                height=500,
+                                                                                width=1200,
+                                                                                content= \
+                                                                                    (
+                                                                                        ft.Column \
+                                                                                            (
+                                                                                                controls=\
+                                                                                                [
+                                                                                                    ft.TextField \
+                                                                                                        (
+                                                                                                            ref=self.bookidreturn,
+                                                                                                            label="Book ID:"
+                                                                                                        ),
+                                                                                                    ft.ElevatedButton \
+                                                                                                        (
+                                                                                                            on_click=self.returnbutton,
+                                                                                                            text='RETURN'
+                                                                                                        ),
+                                                                                                    ft.Container \
+                                                                                                        (
+                                                                                                            content= \
+                                                                                                                (
+                                                                                                                    ft.DataTable \
+                                                                                                                        (
+                                                                                                                            ref=self.returncells,
+                                                                                                                            columns=\
+                                                                                                                                [
+                                                                                                                                    ft.DataColumn(ft.Text('Return ID')),
+                                                                                                                                    ft.DataColumn(ft.Text('Book Title')),
+                                                                                                                                    ft.DataColumn(ft.Text('Issue Date')),
+                                                                                                                                    ft.DataColumn(ft.Text('Return Date')),
+                                                                                                                                    ft.DataColumn(ft.Text('Late Return Date'))##########################################
+                                                                                                                                ]
+
+                                                                                                                        )
+                                                                                                                )
+                                                                                                        )
+                                                                                                ]
+                                                                                            )
+                                                                                    )
+                                                                            )
+
+                                                                    ]
+                                                                )
+                                                        )
+
+                                                ),
+#-------------------------------------------------------------------------------------------------------------------------------------------------------------#
                                             ft.Container(
-                                                visible=True,
+                                                visible=False,###>>> THIS FOR ISSUEBOOK PAGE
                                                 padding=10,
                                                 bgcolor=ft.colors.TERTIARY_CONTAINER,
                                                 width=10000,
@@ -189,7 +437,7 @@ class Dashboard(AppPage):
                                                                 border_radius=9,
                                                                 bgcolor=ft.colors.ON_TERTIARY,
                                                                 width=10000,
-                                                                height=100,
+                                                                height=90,
                                                                 content=ft.Text(
                                                                     value=" Issue",
                                                                     size=50,
