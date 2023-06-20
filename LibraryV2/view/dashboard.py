@@ -1,6 +1,6 @@
 import flet as ft
 from view.AppPage import AppPage
-from controller.DashboardController import INPUT_ID
+from controller.DashboardController import INPUT_ID,borrowerlen,borrowedlen,availablebooklen
 from view.material.IssueBook import *
 from controller.BookController import Books,check_borrowed_book
 import base64
@@ -224,6 +224,9 @@ class Dashboard(AppPage):
         self.addborrowervisible.current.visible = False
         self.dashboardvisible.current.visible = False
         self.maintenancevisible.current.visible = False
+        borrowedlen()
+        availablebooklen()
+        borrowerlen()
         borrowed_check()
         checklatereturn()
         self.page.update()
@@ -235,6 +238,9 @@ class Dashboard(AppPage):
         self.addborrowervisible.current.visible = False
         self.dashboardvisible.current.visible = False
         self.maintenancevisible.current.visible = False
+        borrowedlen()
+        availablebooklen()
+        borrowerlen()
         borrowed_check()
         checklatereturn()
         self.page.update()
@@ -246,6 +252,9 @@ class Dashboard(AppPage):
         self.addborrowervisible.current.visible = False
         self.dashboardvisible.current.visible = False
         self.maintenancevisible.current.visible = False
+        borrowedlen()
+        availablebooklen()
+        borrowerlen()
         borrowed_check()
         checklatereturn()
         self.page.update()
@@ -257,6 +266,9 @@ class Dashboard(AppPage):
         self.addborrowervisible.current.visible = False
         self.dashboardvisible.current.visible = False
         self.maintenancevisible.current.visible = False
+        borrowedlen()
+        availablebooklen()
+        borrowerlen()
         borrowed_check()
         checklatereturn()
         self.page.update()
@@ -268,6 +280,9 @@ class Dashboard(AppPage):
         self.addborrowervisible.current.visible = True
         self.dashboardvisible.current.visible = False
         self.maintenancevisible.current.visible = False
+        borrowedlen()
+        availablebooklen()
+        borrowerlen()
         borrowed_check()
         checklatereturn()
         self.page.update()
@@ -279,6 +294,9 @@ class Dashboard(AppPage):
         self.addborrowervisible.current.visible = False
         self.dashboardvisible.current.visible = True
         self.maintenancevisible.current.visible = False
+        borrowedlen()
+        availablebooklen()
+        borrowerlen()
         borrowed_check()
         checklatereturn()
         self.page.update()
@@ -290,6 +308,9 @@ class Dashboard(AppPage):
         self.addborrowervisible.current.visible = False
         self.dashboardvisible.current.visible = False
         self.maintenancevisible.current.visible = True
+        borrowedlen()
+        availablebooklen()
+        borrowerlen()
         borrowed_check()
         checklatereturn()
         self.page.update()
@@ -562,7 +583,7 @@ class Dashboard(AppPage):
                                         height=820,
                                         border_radius=15,
                                         ref=self.maintenancevisible,
-                                        visible=True,
+                                        visible=False,
                                         content= \
                                             (
                                                 ft.Column \
@@ -762,8 +783,142 @@ class Dashboard(AppPage):
                                     ),
                                 ft.Container \
                                     (
+                                        padding=10,
+                                        bgcolor=ft.colors.TERTIARY_CONTAINER,
+                                        width=10000,
+                                        height=820,
+                                        border_radius=15,
                                         ref=self.dashboardvisible,
-                                        visible=False
+                                        visible=True,
+                                        content= \
+                                            (
+                                                ft.Column \
+                                                    (
+                                                        controls=\
+                                                        [
+                                                            ft.Container \
+                                                                (
+                                                                    padding=10,
+                                                                    border_radius=9,
+                                                                    bgcolor=ft.colors.ON_TERTIARY,
+                                                                    width=10000,
+                                                                    height=90,
+                                                                    content= \
+                                                                        (
+
+                                                                            ft.Text \
+                                                                                (
+                                                                                    value="Dashboard",
+                                                                                    size=50
+                                                                                )
+                                                                        )
+                                                                ),
+                                                            ft.Container \
+                                                                (
+                                                                    content=\
+                                                                    ft.Row \
+                                                                        (
+                                                                            controls=\
+                                                                            [
+                                                                                ft.Container \
+                                                                                    (
+                                                                                        border_radius=2,
+                                                                                        height=150,
+                                                                                        width=250,
+                                                                                        bgcolor=ft.colors.ON_TERTIARY,
+                                                                                        content= \
+                                                                                            (
+                                                                                                ft.Column \
+                                                                                                    (
+                                                                                                        controls=\
+                                                                                                        [
+                                                                                                            ft.Text \
+                                                                                                                (
+                                                                                                                    size=25,
+                                                                                                                    value=len(borrowerlen())
+                                                                                                                ),
+                                                                                                            ft.Container \
+                                                                                                                (
+                                                                                                                    height=65
+                                                                                                                ),
+                                                                                                            ft.Text \
+                                                                                                                (
+                                                                                                                    size=18,
+                                                                                                                    value="BORROWER"
+                                                                                                                )
+
+                                                                                                        ]
+                                                                                                    )
+                                                                                            )
+                                                                                    ),
+                                                                                ft.Container \
+                                                                                        (
+                                                                                        border_radius=2,
+                                                                                        height=150,
+                                                                                        width=250,
+                                                                                        bgcolor=ft.colors.ON_TERTIARY,
+                                                                                        content= \
+                                                                                            (
+                                                                                                ft.Column \
+                                                                                                        (
+                                                                                                        controls= \
+                                                                                                            [
+                                                                                                                ft.Text \
+                                                                                                                        (
+                                                                                                                        size=25,
+                                                                                                                        value=len(borrowedlen())
+                                                                                                                        ),
+                                                                                                                ft.Container \
+                                                                                                                        (
+                                                                                                                        height=65
+                                                                                                                    ),
+                                                                                                                ft.Text \
+                                                                                                                        (
+                                                                                                                        size=18,
+                                                                                                                        value="BORROWED BOOK"
+                                                                                                                    )
+
+                                                                                                            ]
+                                                                                                    )
+                                                                                            )
+                                                                                    ),
+                                                                                ft.Container \
+                                                                                        (
+                                                                                        border_radius=2,
+                                                                                        height=150,
+                                                                                        width=250,
+                                                                                        bgcolor=ft.colors.ON_TERTIARY,
+                                                                                        content= \
+                                                                                            (
+                                                                                                ft.Column \
+                                                                                                        (
+                                                                                                        controls= \
+                                                                                                            [
+                                                                                                                ft.Text \
+                                                                                                                        (
+                                                                                                                        size=25,
+                                                                                                                        value=len(availablebooklen())
+                                                                                                                        ),
+                                                                                                                ft.Container \
+                                                                                                                        (
+                                                                                                                        height=65
+                                                                                                                    ),
+                                                                                                                ft.Text \
+                                                                                                                        (
+                                                                                                                        size=18,
+                                                                                                                        value="AVAILABLE BOOKS"
+                                                                                                                    )
+
+                                                                                                            ]
+                                                                                                    )
+                                                                                            )
+                                                                                    )
+                                                                            ]
+                                                                        )
+                                                                )
+                                                        ]
+                                                    )
+                                            )
                                     ),
                                 #---------------FOR PULLOUT BOOK-----------------#
                                 ft.Container \

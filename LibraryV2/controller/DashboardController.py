@@ -28,3 +28,22 @@ def INPUT_ID(id):
 
         items.append((id,firstname,lastname,email,phonenumber,Address,avatar,course))
     return items
+
+def borrowerlen():
+    query = f'SELECT firstname from borrower'
+    cursor.execute(query)
+    borrower = cursor.fetchall()
+    return borrower
+
+def borrowedlen():
+    query = f'SELECT title from book WHERE borrowed = 0'
+    cursor.execute(query)
+    borrowed = cursor.fetchall()
+    return borrowed
+
+def availablebooklen():
+    query = f'SELECT title from book WHERE borrowed = 1'
+    cursor.execute(query)
+    available = cursor.fetchall()
+    return available
+
